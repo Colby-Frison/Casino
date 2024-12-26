@@ -40,11 +40,12 @@ int getChips(){
     return chips;
 }
 
-int main() {
-    // get user name and set user
-    cout << "Enter Name: ";
-    cin >> user;
-    cout << endl;
+void makeUser(string name){
+    cout << "make new";
+}
+
+void start(){
+    string input;
 
     // open file and check if exists
     ifstream file(fileConv(user));
@@ -58,11 +59,32 @@ int main() {
     else {
         // printing the error message
         cout << "User does not exist" << endl;
+
+        cout << "Create new User? [y/n]:";
+        cin >> input;
+
+        if(input == "y" || input == "Y" || input == "yes" || input == "Yes"){
+            makeUser(user);
+        }
+        else if(input == "n" || input == "N" || input == "no" || input == "No"){
+
+            cout << "Enter different user: ";
+            cin >> user;
+            cout << endl;
+            start();
+        }
+
     }
-
     file.close();
+}
 
-    cout << "Chips: " << getChips() << endl;
+int main() {
+
+    cout << "Enter Name: ";
+    cin >> user;
+    cout << endl;
+
+    start();
 
     return 0;
 }
