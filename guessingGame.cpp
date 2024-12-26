@@ -4,30 +4,65 @@
 
 using namespace std;
 
-int main() {
-    FILE* file;
-    string name;
+string user;
+int chips = -1;
+
+//converts name to the proper file name in directory
+string fileConv(string name){
     string fileName = "Users/";
-
-    cout << "Enter Name: ";
-    cin >> name;
-    cout << endl;
-
-    fileName += name;
+    fileName += user;
     fileName += ".txt";
 
-    file = fopen(fileName.c_str(), "r");
+    return fileName;
+}
 
-    if (file!=NULL)
-    {
-        // printing the success message
-        cout << "File exists" << endl;
+// opens file and updates chips global variable
+int getChips(){
+    if(chips == -1) {
+        ifstream userFile(fileConv(user));
+
+        string line;
+        getline(userFile, line);
+
+        string chipStr = "";
+
+        // loop line and get num
+        for(char c : line){
+            if(isdigit(c)) {
+                chipStr += c;
+            }
+        }
+        chips = stoi(chipStr);
+
+        userFile.close();
     }
-    else
-    {
+
+    return chips;
+}
+
+int main() {
+    // get user name and set user
+    cout << "Enter Name: ";
+    cin >> user;
+    cout << endl;
+
+    // open file and check if exists
+    ifstream file(fileConv(user));
+
+    if (file.is_open()) {
+        file.close();
+
+        // display available chips
+        cout << "Chips: " << getChips() << endl;
+    }
+    else {
         // printing the error message
-        cout << "File does not exists" << endl;
+        cout << "User does not exist" << endl;
     }
+
+    file.close();
+
+    cout << "Chips: " << getChips() << endl;
 
     return 0;
 }
