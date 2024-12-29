@@ -40,11 +40,22 @@ int getChips(){
     return chips;
 }
 
-void makeUser(string name){
-    cout << "make new";
+// creates new user based on global user variable
+void makeUser(){
+    ofstream file(fileConv(user));
+    chips = 10;
+
+    file << "Chips: 10";
+
+    
+    cout << endl << "New user created" << endl;
+    cout << "Username: " << user << endl;
+    cout << "Chips available: " << chips << endl;
 }
 
-void start(){
+// user global user variable to select user profile
+// if profile doesnt exist create new profile
+void pickUser(){
     string input;
 
     // open file and check if exists
@@ -64,19 +75,31 @@ void start(){
         cin >> input;
 
         if(input == "y" || input == "Y" || input == "yes" || input == "Yes"){
-            makeUser(user);
+            makeUser();
         }
         else if(input == "n" || input == "N" || input == "no" || input == "No"){
 
             cout << "Enter different user: ";
             cin >> user;
             cout << endl;
-            start();
+            pickUser();
         }
 
     }
     file.close();
 }
+
+// save progress by updating chips in txt profile
+void save(){
+    ofstream file(fileConv(user));
+
+    file << "Chips: " << chips;
+    
+    cout << endl << "Progress Saved" << endl;
+    cout << "Username: " << user << endl;
+    cout << "Chips available: " << chips << endl;
+}
+
 
 int main() {
 
@@ -84,7 +107,7 @@ int main() {
     cin >> user;
     cout << endl;
 
-    start();
+    pickUser();
 
     return 0;
 }
