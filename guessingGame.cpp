@@ -6,6 +6,8 @@ using namespace std;
 
 string user;
 int chips = -1;
+bool userSelected = false;
+
 
 //converts name to the proper file name in directory
 string fileConv(string name){
@@ -66,6 +68,7 @@ void pickUser(){
 
         // display available chips
         cout << "Chips: " << getChips() << endl;
+        userSelected = true;
     }
     else {
         // printing the error message
@@ -100,6 +103,9 @@ void save(){
     cout << "Chips available: " << chips << endl;
 }
 
+void gameLoop(){
+
+}
 
 int main() {
 
@@ -108,6 +114,10 @@ int main() {
     cout << endl;
 
     pickUser();
+    if(userSelected) // if user us selected enter game loop
+        gameLoop();
+
+    save(); // once gameloop is exited save game before exiting program
 
     return 0;
 }
