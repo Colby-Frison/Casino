@@ -6,9 +6,17 @@ using namespace std;
 
 string user;
 int chips = -1;
+int round = 0;
 bool userSelected = false;
 
 
+bool yesCheck(string input){
+    if(input == "y" || input == "Y" || input == "yes" || input == "Yes"){
+            return true;
+    }
+    return false;
+
+}
 //converts name to the proper file name in directory
 string fileConv(string name){
     string fileName = "Users/";
@@ -77,10 +85,10 @@ void pickUser(){
         cout << "Create new User? [y/n]:";
         cin >> input;
 
-        if(input == "y" || input == "Y" || input == "yes" || input == "Yes"){
+        if(yesCheck(input)){
             makeUser();
         }
-        else if(input == "n" || input == "N" || input == "no" || input == "No"){
+        else{
 
             cout << "Enter different user: ";
             cin >> user;
@@ -107,15 +115,64 @@ void gameLoop(){
 
 }
 
+void start(){
+    if(userSelected) {// if user us selected enter game loop
+        string input;
+
+        cout << "Start game? [y/n]";
+        cin >> input;
+        cout << endl;
+
+        if(yesCheck(input))
+            gameLoop();
+        else {
+            cout << "Options:" << endl;
+            cout << "1. Pick different user" << endl;
+            cout << "2. Exit game" << endl;
+            cout << "3. Start game" << endl;
+
+            cout << "Choose number [1/2/3]:";
+            cin >> input;
+            cout << endl;
+
+            if(input == "1") {
+                cout << "Picking new user: " << endl;
+                userSelected = false;
+
+                cout << "Enter user: ";
+                cin >> user;
+                cout << endl;
+                pickUser();
+
+            }
+            else if(input == "2") {
+                // exit game;
+            }
+            else if(input == "3") {
+                cout << "Starting game: " << endl;
+
+                gameLoop();
+            }
+            else {
+                cout << "Please choose valid option";
+            }
+        } 
+
+    }
+    else {
+        cout << "Enter Name: ";
+        cin >> user;
+        cout << endl;
+
+        pickUser();
+        start();
+    }
+}
+
 int main() {
 
-    cout << "Enter Name: ";
-    cin >> user;
-    cout << endl;
+    start();
 
-    pickUser();
-    if(userSelected) // if user us selected enter game loop
-        gameLoop();
 
     save(); // once gameloop is exited save game before exiting program
 
