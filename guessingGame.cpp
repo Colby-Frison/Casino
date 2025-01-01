@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cstdlib>
+#include <ctime>
 
 using namespace std;
 
@@ -111,7 +113,107 @@ void save(){
     cout << "Chips available: " << chips << endl;
 }
 
+void rules(){
+    cout << "You are currently playing the Guessing game. The rules are as follows: " << endl;
+    cout << "In order to play you will first place a bet, then guess a number 1 - 10." << endl;
+    cout << "If the number you guess is within 1 of the number you dont lose any chips." << endl;
+    cout << "If you guess the number exactly you recieve the amount you bet." << endl;
+    cout << "If you are outside farther from 1 from the target number you lose your bet." << endl;
+}
+
 void gameLoop(){
+    int bet = -1;
+    if(chips > 1){
+        cout << "Place a bet 1 - " << chips << ": ";
+        cin >> bet;
+    }
+    else if(chips == 1){
+        string input;
+        cout << "You only have 1 chip left, would you like to bet it? [y/n]";
+        cin >> input;
+        if(yesCheck(input)){
+            bet = 1;
+        }
+        else {
+            cout << "You have decided not to place the bet." << endl;
+            cout << "Choose one of the following options:" << endl;
+
+            cout << "1. Place the bet" << endl;
+            cout << "2. Exit game" << endl;
+            cout << "3. Pick new User" << endl;
+            if(input == "1") {
+                cout << "Placing bet" << endl;
+
+                bet = 1;
+
+            }
+            else if(input == "2") {
+                // exit game;
+                return;
+            }
+            else if(input == "3") {
+                cout << "Picking new user: " << endl;
+                userSelected = false;
+
+                cout << "Enter user: ";
+                cin >> user;
+                cout << endl;
+                pickUser();
+            }
+            else {
+                cout << "Please choose valid option";
+                // I'm now reaizing this has no way of looping so create a method
+                // that is able to takes in parameters and is able to proporly have the options menu 
+                // pop up and handle errors effectively
+
+                // Along with that see if there is a way to make it clear on each text entry/prompt
+                // Also see if theres a way to make the file directory not be there.
+                // That obviously isnt nessesary, but it would definatley make it more visually appealing
+            }
+        }
+    }
+    else {
+        cout << "You do not have enough chips to place a bet, please choose one of the following options: " << endl;
+
+        cout << "1. Exit game" << endl;
+        cout << "2. Pick new user" << endl;
+
+        string input;
+        cin >> input;
+        cout << endl;
+
+        if(input == "1") {
+            //exit game
+            return;
+
+        }
+        else if(input == "2") {
+            cout << "Picking new user: " << endl;
+            userSelected = false;
+
+            cout << "Enter user: ";
+            cin >> user;
+            cout << endl;
+            pickUser();
+        }
+        else {
+            cout << "Please choose valid option";
+        }
+    }
+
+    if (bet != -1){
+        srand(time(0)); 
+
+        int randomNum = rand(); 
+        int randomNum1to10 = 1 + (rand() % 10);
+
+        cout << "Enter a number 1 - 10" << endl;
+
+        string guess;
+        cin >> guess;
+
+        //actaul guessing game mechanic
+    }
 
 }
 
@@ -123,8 +225,10 @@ void start(){
         cin >> input;
         cout << endl;
 
-        if(yesCheck(input))
+        if(yesCheck(input)){
+            rules();
             gameLoop();
+        }
         else {
             cout << "Options:" << endl;
             cout << "1. Pick different user" << endl;
@@ -151,6 +255,7 @@ void start(){
             else if(input == "3") {
                 cout << "Starting game: " << endl;
 
+                rules();
                 gameLoop();
             }
             else {
