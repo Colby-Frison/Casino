@@ -8,7 +8,7 @@ using namespace std;
 
 string user;
 int chips = -1;
-int round = 0;
+int roundNum = 0;
 bool userSelected = false;
 
 
@@ -205,14 +205,63 @@ void gameLoop(){
         srand(time(0)); 
 
         int randomNum = rand(); 
-        int randomNum1to10 = 1 + (rand() % 10);
+        int num = 1 + (rand() % 10);
 
         cout << "Enter a number 1 - 10" << endl;
 
         string guess;
         cin >> guess;
 
-        //actaul guessing game mechanic
+        if (stoi(guess) == num){
+            cout << "You guessed the number" << endl;
+            cout << "You have recieved " << bet * 2 << " chips" << endl;
+            chips += bet * 2;
+
+            cout << endl << "Current balance is now: " <<  chips << endl;
+
+            cout << "Play again? [y/n] ";
+
+            string input;
+            cin >> input;
+            if(yesCheck(input)){ 
+                gameLoop();
+            }
+            else{
+                cout << "Options:" << endl;
+            cout << "1. Pick different user" << endl;
+            cout << "2. Exit game" << endl;
+            cout << "3. Start game" << endl;
+
+            cout << "Choose number [1/2/3]:";
+            cin >> input;
+            cout << endl;
+
+            if(input == "1") {
+                cout << "Picking new user: " << endl;
+                userSelected = false;
+
+                cout << "Enter user: ";
+                cin >> user;
+                cout << endl;
+                pickUser();
+
+            }
+            else if(input == "2") {
+                // exit game;
+            }
+            else if(input == "3") {
+                cout << "Starting game: " << endl;
+
+                rules();
+                gameLoop();
+            }
+            else {
+                cout << "Please choose valid option";
+            }
+            }
+
+
+        }
     }
 
 }
@@ -221,7 +270,7 @@ void start(){
     if(userSelected) {// if user us selected enter game loop
         string input;
 
-        cout << "Start game? [y/n]";
+        cout << "Start game? [y/n] ";
         cin >> input;
         cout << endl;
 
