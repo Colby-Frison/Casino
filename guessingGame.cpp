@@ -122,6 +122,7 @@ void rules(){
 }
 
 void gameLoop(){
+    cout << endl;
     int bet = -1;
     if(chips > 1){
         cout << "Place a bet 1 - " << chips << ": ";
@@ -219,6 +220,35 @@ void gameLoop(){
 
             cout << endl << "Current balance is now: " <<  chips << endl;
 
+        }
+        else if(stoi(guess) == num + 1 || stoi(guess) == num - 1 ) {
+            cout << "You have guessed one away from the number so you don't lose any chips" << endl;
+
+
+            cout << endl << "Current balance is now: " <<  chips << endl;
+
+        }
+        else {
+            cout << "You have guessed incorectly, so you have lost " << bet << " chips" << endl;
+
+            chips -= bet;
+            if(chips == 1){
+                cout << "You only have one chip left spend it carefully" << endl;
+            }
+            else if(chips == 0) {
+                if(num % 2 == 0) {
+                    cout << "You have no more chips, maybe its time to call it" << endl;
+                }
+                else {
+                    cout << "You have no more chips please exit or choose a new profile" << endl;
+                }
+            }
+            else {
+                cout << "You now have " << chips << " chips left, spend them carefully" << endl;
+            }
+        }
+
+        if(chips >= 1){
             cout << "Play again? [y/n] ";
 
             string input;
@@ -228,11 +258,45 @@ void gameLoop(){
             }
             else{
                 cout << "Options:" << endl;
+                cout << "1. Pick different user" << endl;
+                cout << "2. Exit game" << endl;
+                cout << "3. Start game" << endl;
+
+                cout << "Choose number [1/2/3]:";
+                cin >> input;
+                cout << endl;
+
+                if(input == "1") {
+                    cout << "Picking new user: " << endl;
+                    userSelected = false;
+
+                    cout << "Enter user: ";
+                    cin >> user;
+                    cout << endl;
+                    pickUser();
+
+                }
+                else if(input == "2") {
+                    // exit game;
+                }
+                else if(input == "3") {
+                    cout << "Starting game: " << endl;
+
+                    rules();
+                    gameLoop();
+                }
+                else {
+                    cout << "Please choose valid option";
+                }
+            }
+        }
+        else {
+            cout << "Please choose one of the following options:" << endl;
             cout << "1. Pick different user" << endl;
             cout << "2. Exit game" << endl;
-            cout << "3. Start game" << endl;
 
-            cout << "Choose number [1/2/3]:";
+            cout << "Choose number [1/2]:";
+            string input;
             cin >> input;
             cout << endl;
 
@@ -249,21 +313,11 @@ void gameLoop(){
             else if(input == "2") {
                 // exit game;
             }
-            else if(input == "3") {
-                cout << "Starting game: " << endl;
-
-                rules();
-                gameLoop();
-            }
             else {
                 cout << "Please choose valid option";
             }
-            }
-
-
         }
     }
-
 }
 
 void start(){
