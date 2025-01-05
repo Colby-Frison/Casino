@@ -178,7 +178,7 @@ void option(bool third){
 }
 
 void gameLoop(){
-    cout << endl;
+    system("clear");
     int bet = -1;
     if(chips > 1){
         cout << "Place a bet 1 - " << chips << ": ";
