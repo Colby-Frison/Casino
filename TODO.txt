@@ -1,0 +1,14 @@
+
+1-06-2025 || 12:01 am
+So basically there is an issue where all of the methods in menu.cpp are using the player class definition from that file
+while the functions in the guessing game file are using the class definition for player from  the header file. I'm not sure 
+if that is actually the problem, but thats what it seems like. My way of fixing this is going to be moving methods that dont
+need to be in the player class outside of the player class. This will include taking stuff like pickUser() makeUser() and fileConv() 
+out of the class. This will cause some issues, but it generally should be fine. I also need to reorganize some of the recusive looping
+stuff so looks a little nicer. I also need to change some of the if statements to switch cases. Most of them are fine, but some 
+of the if statement strings should be looked at again
+
+so:
+- Move methods that font need to be in the class out of it
+- reorganize recusive loops 
+- if statements to switch cases
