@@ -12,3 +12,14 @@ so:
 - Move methods that font need to be in the class out of it
 - reorganize recusive loops 
 - if statements to switch cases
+
+1-06-2025 || 2:49 pm
+I finsihed establishing the player class, but I'm realizing now that I need to declare it in the header then define it in the source file
+this will allow the other files to access the same Player class, which is the issue I'm currently having with the gameLoop right now. I 
+need to figure out how to put the constructors in there though, I dont know if I cna just put them in as is, or if I will need to just 
+put the decleration then define it in the source like the others or if there is a special case.
+
+so:
+- move class decleration and methods into header file
+- figure out constructor decleration/definition
+- adjust guessing game file to work with this
