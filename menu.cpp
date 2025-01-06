@@ -1,4 +1,3 @@
-#include "menu.h"
 #include "guessingGame.h"
 
 #include <iostream>
@@ -81,7 +80,7 @@ class Player {
 
     // user global user variable to select user profile
     // if profile doesnt exist create new profile
-    void pickUser(){
+    void pickUser(Player player){
         string input;
 
         // open file and check if exists
@@ -109,7 +108,7 @@ class Player {
                 cout << "Enter different user: ";
                 cin >> user;
                 cout << endl;
-                pickUser();
+                pickUser(player);
             }
 
         }
@@ -125,6 +124,33 @@ class Player {
         cout << endl << "Progress Saved" << endl;
         cout << "Username: " << user << endl;
         cout << "Chips available: " << chips << endl << endl;
+    }
+
+    void start(Player player){
+        if(userSelected) {// if user us selected enter game loop
+            string input;
+
+            cout << "Start game? [y/n] ";
+            cin >> input;
+            cout << endl;
+
+            if(yesCheck(input)){
+                rules();
+                gameLoop(player);
+            }
+            else {
+                option(true, player);
+            } 
+
+        }
+        else {
+            cout << "Enter Name: ";
+            cin >> user;
+            cout << endl;
+
+            pickUser();
+            start(player);
+        }
     }
 
 };

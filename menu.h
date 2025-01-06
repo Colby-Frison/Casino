@@ -8,6 +8,14 @@ class Player {
         int chips = -1; // number of chips available
         bool userSelected = false; // is there a user selected, doesnt make since for first user selection, but when switching between users its nice
         std::string playing; // stores what game is being played
+
+    bool yesCheck(std::string input);
+
+    void pickUser();
+
+    void save();
+
+
 };
 
 

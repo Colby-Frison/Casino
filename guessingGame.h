@@ -1,4 +1,9 @@
 #pragma once 
 
 #include "menu.h"
-#include "guessingGame.h"
+
+void rules();
+
+void option(bool third, Player player);
+
+void gameLoop(Player player);
