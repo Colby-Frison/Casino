@@ -11,14 +11,134 @@ using namespace std;
 
 
 class Player {
-    public:
+    private:
         string user; // username
-        int chips = -1; // number of chips available
-        bool userSelected = false; // is there a user selected, doesnt make since for first user selection, but when switching between users its nice
-        string playing; // stores what game is being played
+        int chips; // number of chips available
+        bool userSelected; // is there a user selected, doesnt make since for first user selection, but when switching between users its nice
+        string playing; // stores what game is being played, null if nothing
+
+    public:
+
+        // constructors
+        Player(): chips(-1), userSelected(false) {
+            cout << "No user selected, create new user? [y/n]:";
+
+            string input;
+            cin >> input;
+
+            if(yesCheck(input)){
+                cout << "Enter name: ";
+                cin >> input;
+                user = input;
+
+                ifstream file(filename());
+
+                if (!file.is_open()) {
+                    chips = 10;
+                }
+                else {
+                    cout << "User already exists, select " << user << "? [y/n]: ";
+                    cin >> input;
+                    if(yesCheck(input)){
+                        ifstream userFile(filename());
+
+                        string line;
+                        getline(userFile, line);
+
+                        string chipStr = "";
+
+                        // loop line and get num
+                        for(char c : line){
+                            if(isdigit(c)) {
+                                chipStr += c;
+                            }
+                        }
+                        chips = stoi(chipStr);
+
+                        userFile.close();
+                    }
+                    else {
+                        
+                    }
+                }
+            }
 
 
-    Player(){}
+        }
+        Player(string user): user(user) {
+            getChips();
+        }
+        Player(string user, int chips): user(user), chips(chips), userSelected(true) {}
+        Player(string user, int chips, string game): user(user), chips(chips), userSelected(true), playing(game) {}
+
+        // returns user
+        string getUser(){
+            return user;
+        }
+
+        // if chips is -1 it updates chip from user file, else it returns what the current chip value is 
+        int getChips(){
+            if(chips == -1) {
+                ifstream userFile(filename());
+
+                string line;
+                getline(userFile, line);
+
+                string chipStr = "";
+
+                // loop line and get num
+                for(char c : line){
+                    if(isdigit(c)) {
+                        chipStr += c;
+                    }
+                }
+                chips = stoi(chipStr);
+
+                userFile.close();
+            }
+
+            return chips;
+        }
+
+        // prints available chips to console
+        void printChips() {
+            cout << "Chips available: " << chips << endl;
+        }
+
+        string filename(){
+            string fileName = "Users/";
+            fileName += user;
+            fileName += ".txt";
+
+            return fileName;
+        }
+
+        void selectUser(){
+            userSelected = true;
+        }
+
+        void unselectUser(){
+            userSelected = false;
+        }
+
+        bool getselectStatus(){
+            return userSelected;
+        }
+
+        // save progress by updating chips in txt profile
+        void save(){
+            ofstream file(filename());
+
+            file << "Chips: " << chips;
+            
+            cout << endl << "Progress Saved" << endl;
+            cout << "Username: " << user << endl;
+            cout << "Chips available: " << chips << endl << endl;
+        }
+
+};
+
+
     // returns a bool based on user entry, implemented because there are a lot of yes no checks
     bool yesCheck(string input){
         if(input == "y" || input == "Y" || input == "yes" || input == "Yes"){
@@ -28,55 +148,18 @@ class Player {
 
     }
 
-    //converts name to the proper file name in directory
-    string fileConv(string name){
-        string fileName = "Users/";
-        fileName += user;
-        fileName += ".txt";
-
-        return fileName;
-    }
-
-    // opens file and updates chips global variable
-    int getChips(){
-        if(chips == -1) {
-            ifstream userFile(fileConv(user));
-
-            string line;
-            getline(userFile, line);
-
-            string chipStr = "";
-
-            // loop line and get num
-            for(char c : line){
-                if(isdigit(c)) {
-                    chipStr += c;
-                }
-            }
-            chips = stoi(chipStr);
-
-            userFile.close();
-        }
-
-        return chips;
-    }
-
-    // prints available chips to console
-    void printChips() {
-        cout << "Chips available: " << chips << endl;
-    }
-
     // creates new user based on global user variable
-    void makeUser(){
-        ofstream file(fileConv(user));
-        chips = 10;
-
+    void makeUser(string name){
+        Player player = Player(name, 10);
+        
+        ofstream file(player.filename());
+        
         file << "Chips: 10";
 
         
         cout << endl << "New user created" << endl;
-        cout << "Username: " << user << endl;
-        printChips();
+        cout << "Username: " << name << endl;
+        player.printChips();
     }
 
     // user global user variable to select user profile
@@ -85,14 +168,14 @@ class Player {
         string input;
 
         // open file and check if exists
-        ifstream file(fileConv(user));
+        ifstream file(player.filename());
 
         if (file.is_open()) {
             file.close();
 
             // display available chips
-            cout << endl << "Chips: " << getChips() << endl;
-            userSelected = true;
+            cout << endl << "Chips: " << player.getChips() << endl;
+            player.selectUser();
         }
         else {
             // printing the error message
@@ -102,33 +185,25 @@ class Player {
             cin >> input;
 
             if(yesCheck(input)){
-                makeUser();
+                makeUser(player.getUser());
             }
             else{
 
                 cout << "Enter different user: ";
-                cin >> user;
+                cin >> input;
                 cout << endl;
-                pickUser(player);
+
+                Player p = Player(input);
+                pickUser(p);
             }
 
         }
         file.close();
     }
 
-    // save progress by updating chips in txt profile
-    void save(){
-        ofstream file(fileConv(user));
-
-        file << "Chips: " << chips;
-        
-        cout << endl << "Progress Saved" << endl;
-        cout << "Username: " << user << endl;
-        cout << "Chips available: " << chips << endl << endl;
-    }
-
+    /*
     void start(Player player){
-        if(userSelected) {// if user us selected enter game loop
+        if(player.getselectStatus()) {// if user us selected enter game loop
             string input;
 
             cout << "Start game? [y/n] ";
@@ -145,16 +220,20 @@ class Player {
 
         }
         else {
+            string input;
+
             cout << "Enter Name: ";
-            cin >> user;
+            cin >> input;
             cout << endl;
+
+            Player p = Player(input);
 
             pickUser(player);
             start(player);
         }
+        
     }
-
-};
+    */
 
 int main() {
 
