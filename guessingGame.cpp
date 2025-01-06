@@ -1,3 +1,6 @@
+#include "menu.h"
+#include "guessingGame.h"
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -10,6 +13,8 @@ string user;
 int chips = -1;
 int roundNum = 0;
 bool userSelected = false;
+
+
 
 // default for gameloop function so it can be called in the option function
 void gameLoop();
@@ -177,7 +182,7 @@ void option(bool third){
     }
 }
 
-void gameLoop(){
+void gameLoop(Player player){
     system("clear");
     int bet = -1;
     if(chips > 1){

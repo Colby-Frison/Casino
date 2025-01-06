@@ -1,1 +1,1 @@
-Chips: 10
+Chips: 100
