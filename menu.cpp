@@ -148,7 +148,7 @@ class Player {
             cin >> user;
             cout << endl;
 
-            pickUser();
+            pickUser(player);
             start(player);
         }
     }

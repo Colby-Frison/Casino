@@ -17,7 +17,7 @@ bool userSelected = false;
 
 
 // default for gameloop function so it can be called in the option function
-void gameLoop();
+void gameLoop(Player player);
 
 // displays rules
 void rules(){
@@ -186,7 +186,7 @@ void gameLoop(Player player){
             string input;
             cin >> input;
             if(player.yesCheck(input)){ 
-                gameLoop();
+                gameLoop(player);
             }
             else{
                 option(true, player);
