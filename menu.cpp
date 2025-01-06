@@ -1,3 +1,4 @@
+#include "menu.h"
 #include "guessingGame.h"
 
 #include <iostream>
