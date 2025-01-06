@@ -68,20 +68,21 @@ class Player {
                 }
             }
         }
-        Player(string user): chips(-1), user(user) {
-            getChips();
-            printChips();
+        Player(string user): chips(-1), user(user), userSelected(true) {
+            getChips(); // gets user's saved chips value
+            printChips(); // prints saved chips value
+            // doesn't need save as if it already has a file which its pulling chips from, and no changes were made so no save needed
         }
         Player(string user, int chips): user(user), chips(chips), userSelected(true) {
-            printChips();
+            printChips(); // prints available chips
+            save(false); // needs save to create and write to the new user's file
         }
         Player(string user, int chips, string game): user(user), chips(chips), userSelected(true), playing(game) {}
 
-        // returns user
+        // Getters:
         string getUser(){
             return user;
         }
-
         // if chips is -1 it updates chip from user file, else it returns what the current chip value is 
         int getChips(){
             if(chips == -1) {
@@ -105,7 +106,33 @@ class Player {
 
             return chips;
         }
+        bool getselectStatus(){
+            return userSelected;
+        }
 
+        // Setters: 
+        void selectUser(){
+            userSelected = true;
+        }
+        void unselectUser(){
+            userSelected = false;
+        }
+        bool getselectStatus(){
+            return userSelected;
+        }
+
+        // save progress by updating chips in txt profile
+        void save(bool display){
+            ofstream file(filename());
+            file << "Chips: " << chips;
+
+            if(true){
+                cout << endl << "Progress Saved" << endl;
+                cout << "Username: " << user << endl;
+                cout << "Chips available: " << chips << endl << endl;
+            }
+        }
+        
         // prints available chips to console
         void printChips() {
             cout << "Chips available: " << chips << endl;
@@ -119,29 +146,6 @@ class Player {
             return fileName;
         }
 
-        void selectUser(){
-            userSelected = true;
-        }
-
-        void unselectUser(){
-            userSelected = false;
-        }
-
-        bool getselectStatus(){
-            return userSelected;
-        }
-
-        // save progress by updating chips in txt profile
-        void save(){
-            ofstream file(filename());
-
-            file << "Chips: " << chips;
-            
-            cout << endl << "Progress Saved" << endl;
-            cout << "Username: " << user << endl;
-            cout << "Chips available: " << chips << endl << endl;
-        }
-
 };
 
 
@@ -153,47 +157,9 @@ class Player {
         return false;
 
     }
+
+
     
-    // user global user variable to select user profile
-    // if profile doesnt exist create new profile
-    void pickUser(Player player){
-        string input;
-
-        // open file and check if exists
-        ifstream file(player.filename());
-
-        if (file.is_open()) {
-            file.close();
-
-            // display available chips
-            cout << endl << "Chips: " << player.getChips() << endl;
-            player.selectUser();
-        }
-        else {
-            // printing the error message
-            cout << "User does not exist" << endl;
-
-            cout << "Create new User? [y/n]:";
-            cin >> input;
-
-            if(yesCheck(input)){
-                makeUser(player.getUser());
-            }
-            else{
-
-                cout << "Enter different user: ";
-                cin >> input;
-                cout << endl;
-
-                Player p = Player(input);
-                pickUser(p);
-            }
-
-        }
-        file.close();
-    }
-
-    /*
     void start(Player player){
         if(player.getselectStatus()) {// if user us selected enter game loop
             string input;
@@ -202,8 +168,8 @@ class Player {
             cin >> input;
             cout << endl;
 
+            // need to adjust this file and header file to resolve the following errors, read TODO to see how
             if(yesCheck(input)){
-                rules();
                 gameLoop(player);
             }
             else {
@@ -220,18 +186,18 @@ class Player {
 
             Player p = Player(input);
 
-            pickUser(player);
+            player = Player(p);
             start(player);
         }
         
     }
-    */
+    
 
 int main() {
 
     Player player;
 
-    player.save(); // once gameloop is exited save game before exiting program
+    player.save(true); // once gameloop is exited save game before exiting program
 
     return 0;
 }
