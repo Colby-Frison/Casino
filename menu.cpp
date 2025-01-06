@@ -34,41 +34,47 @@ class Player {
                 ifstream file(filename());
 
                 if (!file.is_open()) {
-                    chips = 10;
+                    Player(user, 50);
                 }
                 else {
-                    cout << "User already exists, select " << user << "? [y/n]: ";
+                    cout << user << " profile already exists, select? [y/n]: ";
                     cin >> input;
                     if(yesCheck(input)){
-                        ifstream userFile(filename());
-
-                        string line;
-                        getline(userFile, line);
-
-                        string chipStr = "";
-
-                        // loop line and get num
-                        for(char c : line){
-                            if(isdigit(c)) {
-                                chipStr += c;
-                            }
-                        }
-                        chips = stoi(chipStr);
-
-                        userFile.close();
+                        Player(user);
                     }
                     else {
-                        
+                        Player();
                     }
                 }
             }
+            else {
+                cout << "Select existing user? [y/n]: ";
+                cin >> input;
+                
+                if(yesCheck(input)){
+                    cout << "Enter username: ";
+                    cin >> input;
+                    user = input;
 
+                    ifstream file(filename());
 
+                    if (file.is_open()) {
+                        Player(user);
+                    }
+                    Player(input);
+                }
+                else {
+                    Player();
+                }
+            }
         }
-        Player(string user): user(user) {
+        Player(string user): chips(-1), user(user) {
             getChips();
+            printChips();
         }
-        Player(string user, int chips): user(user), chips(chips), userSelected(true) {}
+        Player(string user, int chips): user(user), chips(chips), userSelected(true) {
+            printChips();
+        }
         Player(string user, int chips, string game): user(user), chips(chips), userSelected(true), playing(game) {}
 
         // returns user
@@ -147,21 +153,7 @@ class Player {
         return false;
 
     }
-
-    // creates new user based on global user variable
-    void makeUser(string name){
-        Player player = Player(name, 10);
-        
-        ofstream file(player.filename());
-        
-        file << "Chips: 10";
-
-        
-        cout << endl << "New user created" << endl;
-        cout << "Username: " << name << endl;
-        player.printChips();
-    }
-
+    
     // user global user variable to select user profile
     // if profile doesnt exist create new profile
     void pickUser(Player player){
