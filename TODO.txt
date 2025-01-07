@@ -13,6 +13,8 @@ so:
 - reorganize recusive loops 
 - if statements to switch cases
 
+
+
 1-06-2025 || 2:49 pm
 I finsihed establishing the player class, but I'm realizing now that I need to declare it in the header then define it in the source file
 this will allow the other files to access the same Player class, which is the issue I'm currently having with the gameLoop right now. I 
@@ -23,3 +25,13 @@ so:
 - move class decleration and methods into header file
 - figure out constructor decleration/definition
 - adjust guessing game file to work with this
+
+
+
+01-02-2025 || 3:13 pm
+Implemented changes in menu to gameLoop. I also litterally just coppyied the playerclass into the menu header file, this didn't break anything
+in the menu file, so I think everything is fine, but I guess we'll see when I gifure out how to compile.
+
+so:
+- figure out how to compile with multiple files
+- check the logic of everything so I can try to reduce confusion prior to compiling
