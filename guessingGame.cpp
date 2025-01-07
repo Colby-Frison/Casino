@@ -50,12 +50,12 @@ void option(bool third, Player player){
 
     if(input == "1") {
         cout << "Picking new user: " << endl;
-        player.userSelected = false;
+        player.unselectUser();
 
         cout << "Enter user: ";
-        cin >> player.user;
+        cin >> input;
         cout << endl;
-        player.pickUser();
+        player = Player(input);
 
     }
     else if(input == "2") {
@@ -77,15 +77,15 @@ void option(bool third, Player player){
 void gameLoop(Player player){
     system("clear");
     int bet = -1;
-    if(player.chips > 1){
-        cout << "Place a bet 1 - " << player.chips << ": ";
+    if(player.getChips() > 1){
+        cout << "Place a bet 1 - " << player.getChips() << ": ";
         cin >> bet;
     }
-    else if(player.chips == 1){
+    else if(player.getChips() == 1){
         string input;
         cout << "You only have 1 chip left, would you like to bet it? [y/n]";
         cin >> input;
-        if(player.yesCheck(input)){
+        if(yesCheck(input)){
             bet = 1;
         }
         else {
@@ -107,12 +107,12 @@ void gameLoop(Player player){
             }
             else if(input == "3") {
                 cout << "Picking new user: " << endl;
-                player.userSelected = false;
+                player.unselectUser();
 
                 cout << "Enter user: ";
-                cin >> player.user;
+                cin >> input;
                 cout << endl;
-                player.pickUser();
+                Player(input);
             }
             else {
                 cout << "Please choose valid option";
@@ -148,26 +148,27 @@ void gameLoop(Player player){
         if (stoi(guess) == num){
             cout << "You guessed the number" << endl;
             cout << "You have recieved " << bet * 2 << " chips" << endl;
-            player.chips += bet * 2;
+            int win = bet * 2;
+            player.addChips(win);
 
-            cout << endl << "Current balance is now: " <<  player.chips << endl;
+            cout << endl << "Current balance is now: " <<  player.getChips() << endl;
 
         }
         else if(stoi(guess) == num + 1 || stoi(guess) == num - 1 ) {
             cout << "You have guessed one away from the number so you don't lose any chips" << endl;
 
 
-            cout << endl << "Current balance is now: " <<  player.chips << endl;
+            cout << endl << "Current balance is now: " <<  player.getChips() << endl;
 
         }
         else {
             cout << "You have guessed incorectly, so you have lost " << bet << " chips" << endl << endl;
 
-            player.chips -= bet;
-            if(player.chips == 1){
+            player.takeChips(bet);
+            if(player.getChips() == 1){
                 cout << "You only have one chip left spend it carefully" << endl;
             }
-            else if(player.chips == 0) {
+            else if(player.getChips() == 0) {
                 if(num % 2 == 0) {
                     cout << "You have no more chips, maybe its time to call it" << endl;
                 }
@@ -176,16 +177,16 @@ void gameLoop(Player player){
                 }
             }
             else {
-                cout << "You now have " << player.chips << " chips left, spend them carefully" << endl << endl;
+                cout << "You now have " << player.getChips() << " chips left, spend them carefully" << endl << endl;
             }
         }
 
-        if(player.chips >= 1){
+        if(player.getChips() >= 1){
             cout << "Play again? [y/n] ";
 
             string input;
             cin >> input;
-            if(player.yesCheck(input)){ 
+            if(yesCheck(input)){ 
                 gameLoop(player);
             }
             else{
@@ -204,7 +205,7 @@ int main() {
     Player player;
 
 
-    player.save(); // once gameloop is exited save game before exiting program
+    player.save(false); // once gameloop is exited save game before exiting program
 
     return 0;
 }

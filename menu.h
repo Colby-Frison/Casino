@@ -3,21 +3,150 @@
 #include <string>
 
 class Player {
-    public: 
-        std::string user; // username
-        int chips = -1; // number of chips available
-        bool userSelected = false; // is there a user selected, doesnt make since for first user selection, but when switching between users its nice
-        std::string playing; // stores what game is being played
+    private:
+        string user; // username
+        int chips; // number of chips available
+        bool userSelected; // is there a user selected, doesnt make since for first user selection, but when switching between users its nice
+        string playing; // stores what game is being played, null if nothing
 
-    bool yesCheck(std::string input);
+    public:
 
-    void pickUser();
+        // constructors
+        Player(): chips(-1), userSelected(false) {
+            cout << "No user selected, create new user? [y/n]:";
 
-    void save();
+            string input;
+            cin >> input;
 
+            if(yesCheck(input)){
+                cout << "Enter name: ";
+                cin >> input;
+                user = input;
+
+                ifstream file(filename());
+
+                if (!file.is_open()) {
+                    Player(user, 50);
+                }
+                else {
+                    cout << user << " profile already exists, select? [y/n]: ";
+                    cin >> input;
+                    if(yesCheck(input)){
+                        Player(user);
+                    }
+                    else {
+                        Player();
+                    }
+                }
+            }
+            else {
+                cout << "Select existing user? [y/n]: ";
+                cin >> input;
+                
+                if(yesCheck(input)){
+                    cout << "Enter username: ";
+                    cin >> input;
+                    user = input;
+
+                    ifstream file(filename());
+
+                    if (file.is_open()) {
+                        Player(user);
+                    }
+                    Player(input);
+                }
+                else {
+                    Player();
+                }
+            }
+        }
+        Player(string user): chips(-1), user(user), userSelected(true) {
+            getChips(); // gets user's saved chips value
+            printChips(); // prints saved chips value
+            // doesn't need save as if it already has a file which its pulling chips from, and no changes were made so no save needed
+        }
+        Player(string user, int chips): user(user), chips(chips), userSelected(true) {
+            printChips(); // prints available chips
+            save(false); // needs save to create and write to the new user's file
+        }
+        Player(string user, int chips, string game): user(user), chips(chips), userSelected(true), playing(game) {}
+
+        // Getters:
+        string getUser(){
+            return user;
+        }
+        // if chips is -1 it updates chip from user file, else it returns what the current chip value is 
+        int getChips(){
+            if(chips == -1) {
+                ifstream userFile(filename());
+
+                string line;
+                getline(userFile, line);
+
+                string chipStr = "";
+
+                // loop line and get num
+                for(char c : line){
+                    if(isdigit(c)) {
+                        chipStr += c;
+                    }
+                }
+                chips = stoi(chipStr);
+
+                userFile.close();
+            }
+
+            return chips;
+        }
+        bool getselectStatus(){
+            return userSelected;
+        }
+
+        // Setters: 
+        void selectUser(){
+            userSelected = true;
+        }
+        void unselectUser(){
+            userSelected = false;
+        }
+        bool getselectStatus(){
+            return userSelected;
+        }
+        void addChips(int x){
+            chips += x;
+        }
+        void takeChips(int x){
+            chips -= x;
+        }
+
+        // save progress by updating chips in txt profile
+        void save(bool display){
+            ofstream file(filename());
+            file << "Chips: " << chips;
+
+            if(true){
+                cout << endl << "Progress Saved" << endl;
+                cout << "Username: " << user << endl;
+                cout << "Chips available: " << chips << endl << endl;
+            }
+        }
+        
+        // prints available chips to console
+        void printChips() {
+            cout << "Chips available: " << chips << endl;
+        }
+
+        string filename(){
+            string fileName = "Users/";
+            fileName += user;
+            fileName += ".txt";
+
+            return fileName;
+        }
 
 };
 
+bool yesCheck(string input);
 
 // Header files seem to be working just have to reimplement functions in porper files and add proper functions to the correct headers
 // also need to rewrite some of the functions to work with the Player class
