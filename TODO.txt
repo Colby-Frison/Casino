@@ -35,3 +35,11 @@ in the menu file, so I think everything is fine, but I guess we'll see when I gi
 so:
 - figure out how to compile with multiple files
 - check the logic of everything so I can try to reduce confusion prior to compiling
+
+01-08-2025 || 9:36 pm
+It almost compiles, it says the function yesCheck(string input) is declared multiple times in main.cpp, but it isnt even defined in that file so
+I'm not sure what the issue is. That is the only error left though (unless yesCheck() causes errors), so after I get that wokring it should compile.
+
+so:
+- get yesCheck() to work properly
+
