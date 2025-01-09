@@ -1,6 +1,19 @@
 #pragma once
 
+#include <iostream>
+#include <fstream>
 #include <string>
+#include <cstdlib>
+#include <ctime>
+
+using namespace std;
+
+bool yesCheck(string input){
+    if(input == "y" || input == "Y" || input == "yes" || input == "Yes"){
+        return true;
+    }
+    else { return false; }
+}
 
 class Player {
     private:
@@ -98,9 +111,6 @@ class Player {
 
             return chips;
         }
-        bool getselectStatus(){
-            return userSelected;
-        }
 
         // Setters: 
         void selectUser(){
@@ -145,8 +155,6 @@ class Player {
         }
 
 };
-
-bool yesCheck(string input);
 
 // Header files seem to be working just have to reimplement functions in porper files and add proper functions to the correct headers
 // also need to rewrite some of the functions to work with the Player class

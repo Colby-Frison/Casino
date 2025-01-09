@@ -1,0 +1,1 @@
+// potentially move  the player class into here to keep everything properlly organized, but I'm trying to actaully get everything to compile first

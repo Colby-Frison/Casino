@@ -199,13 +199,3 @@ void gameLoop(Player player){
         }
     }
 }
-
-int main() {
-
-    Player player;
-
-
-    player.save(false); // once gameloop is exited save game before exiting program
-
-    return 0;
-}

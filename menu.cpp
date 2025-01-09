@@ -11,16 +11,6 @@ using namespace std;
 
 // player class go here If i accidentally broke everything
 
-    // returns a bool based on user entry, implemented because there are a lot of yes no checks
-    bool yesCheck(string input){
-        if(input == "y" || input == "Y" || input == "yes" || input == "Yes"){
-                return true;
-        }
-        return false;
-
-    }
-
-
     
     void start(Player player){
         if(player.getselectStatus()) {// if user us selected enter game loop
@@ -57,9 +47,7 @@ using namespace std;
 
 int main() {
 
-    Player player;
-
-    player.save(true); // once gameloop is exited save game before exiting program
+    cout << "Compiles";
 
     return 0;
 }
