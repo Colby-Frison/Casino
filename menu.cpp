@@ -9,8 +9,12 @@
 
 using namespace std;
 
-// player class go here If i accidentally broke everything
-
+    bool yesCheck(string input){
+        if(input == "y" || input == "Y" || input == "yes" || input == "Yes"){
+            return true;
+        }
+        else { return false; }
+    }
     
     void start(Player player){
         if(player.getselectStatus()) {// if user us selected enter game loop

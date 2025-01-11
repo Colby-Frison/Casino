@@ -8,12 +8,7 @@
 
 using namespace std;
 
-bool yesCheck(string input){
-    if(input == "y" || input == "Y" || input == "yes" || input == "Yes"){
-        return true;
-    }
-    else { return false; }
-}
+bool yesCheck(string input);
 
 class Player {
     private:
