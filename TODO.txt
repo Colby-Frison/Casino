@@ -43,3 +43,19 @@ I'm not sure what the issue is. That is the only error left though (unless yesCh
 so:
 - get yesCheck() to work properly
 
+01-10-2025 || 9:17 pm
+The reason it wouldnt compile is I had the yesCheck mehod defined in the header instead of the source file, I don't know why i didnt assume that was
+the issue, but its done now so who cares. 
+
+10:00 pm
+Got everything working as intended, still need to test creating new users, but that worked before so I'm assuming it still works, it should still be 
+tested though. Now I need to move onto the other games, I'll probably do slots -> blackjac -> roullete, then maybe poker if I can figure out server 
+stuff, or end up deciding to just do it locally. Nonethe less the infastructure is made to do everything, all that really needs to be done is to 
+create the other game loops, and rename the current one to be more concise.
+
+so:
+- test creating new user
+- rename gameLoop to be more concise
+- make other game loops
+
+- potentially figure out server stuff for multiplayer games (Poker, blackjack, and maybe even roullete)
