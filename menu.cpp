@@ -16,42 +16,30 @@ using namespace std;
         else { return false; }
     }
     
-    void start(Player player){
-        if(player.getselectStatus()) {// if user us selected enter game loop
-            string input;
+    void start(){
 
-            cout << "Start game? [y/n] ";
-            cin >> input;
-            cout << endl;
+        string input;
 
-            // need to adjust this file and header file to resolve the following errors, read TODO to see how
-            if(yesCheck(input)){
-                gameLoop(player);
-            }
-            else {
-                option(true, player);
-            } 
+        Player player = Player();
+        cout << "Start game? [y/n] ";
+        cin >> input;
+        cout << endl;
 
+        // need to adjust this file and header file to resolve the following errors, read TODO to see how
+        if(yesCheck(input)){
+            gameLoop(player);
         }
         else {
-            string input;
-
-            cout << "Enter Name: ";
-            cin >> input;
-            cout << endl;
-
-            Player p = Player(input);
-
-            player = Player(p);
-            start(player);
-        }
-        
+            option(true, player);
+        } 
     }
     
 
 int main() {
 
-    cout << "Compiles";
+    cout << "Starting";
+
+    start();
 
     return 0;
 }

@@ -21,7 +21,7 @@ class Player {
 
         // constructors
         Player(): chips(-1), userSelected(false) {
-            cout << "No user selected, create new user? [y/n]:";
+            cout << "No user selected, select user? [y/n]:";
 
             string input;
             cin >> input;
@@ -34,13 +34,17 @@ class Player {
                 ifstream file(filename());
 
                 if (!file.is_open()) {
-                    Player(user, 50);
+                    cout << "Creating profile: " << endl;
+                    cout << "Username: " << user << endl;
+                    cout << "Chips available: 50" << endl;
+                    chips = 50;
                 }
                 else {
+                    string in;
                     cout << user << " profile already exists, select? [y/n]: ";
-                    cin >> input;
-                    if(yesCheck(input)){
-                        Player(user);
+                    cin >> in;
+                    if(yesCheck(in)){
+                        getChips();
                     }
                     else {
                         Player();
@@ -48,33 +52,21 @@ class Player {
                 }
             }
             else {
-                cout << "Select existing user? [y/n]: ";
-                cin >> input;
-                
-                if(yesCheck(input)){
-                    cout << "Enter username: ";
-                    cin >> input;
-                    user = input;
-
-                    ifstream file(filename());
-
-                    if (file.is_open()) {
-                        Player(user);
-                    }
-                    Player(input);
-                }
-                else {
-                    Player();
-                }
+                return;
             }
         }
+
         Player(string user): chips(-1), user(user), userSelected(true) {
             getChips(); // gets user's saved chips value
-            printChips(); // prints saved chips value
+            cout << "Selecting profile: " << endl;
+            cout << "Username: " << user << endl;
+            cout << "Chips available: " << chips << endl;
             // doesn't need save as if it already has a file which its pulling chips from, and no changes were made so no save needed
         }
         Player(string user, int chips): user(user), chips(chips), userSelected(true) {
-            printChips(); // prints available chips
+            cout << "Selecting profile: " << endl;
+            cout << "Username: " << user << endl;
+            cout << "Chips available: " << chips << endl;
             save(false); // needs save to create and write to the new user's file
         }
         Player(string user, int chips, string game): user(user), chips(chips), userSelected(true), playing(game) {}
