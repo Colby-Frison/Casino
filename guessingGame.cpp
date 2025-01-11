@@ -60,6 +60,7 @@ void option(bool third, Player player){
     }
     else if(input == "2") {
         // exit game;
+        player.save(true);
         return;
     }
     else if(third && input == "3") {
@@ -103,6 +104,7 @@ void gameLoop(Player player){
             }
             else if(input == "2") {
                 // exit game;
+                player.save(true);
                 return;
             }
             else if(input == "3") {

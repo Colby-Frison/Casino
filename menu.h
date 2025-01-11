@@ -34,9 +34,10 @@ class Player {
                 ifstream file(filename());
 
                 if (!file.is_open()) {
-                    cout << "Creating profile: " << endl;
+                    system("clear");
+                    cout << "==Profile created==" << endl;
                     cout << "Username: " << user << endl;
-                    cout << "Chips available: 50" << endl;
+                    cout << "Chips available: 50" << endl << endl;
                     chips = 50;
                 }
                 else {
@@ -45,6 +46,11 @@ class Player {
                     cin >> in;
                     if(yesCheck(in)){
                         getChips();
+                        system("clear");
+
+                        cout << "==Profile selected==" << endl;
+                        cout << "Username: " << user << endl;
+                        cout << "Chips available: " << chips << endl << endl;
                     }
                     else {
                         Player();
@@ -58,13 +64,17 @@ class Player {
 
         Player(string user): chips(-1), user(user), userSelected(true) {
             getChips(); // gets user's saved chips value
-            cout << "Selecting profile: " << endl;
+            system("clear");
+
+            cout << "==Profile selected==" << endl;
             cout << "Username: " << user << endl;
             cout << "Chips available: " << chips << endl;
             // doesn't need save as if it already has a file which its pulling chips from, and no changes were made so no save needed
         }
         Player(string user, int chips): user(user), chips(chips), userSelected(true) {
-            cout << "Selecting profile: " << endl;
+            system("clear");
+
+            cout << "==Profile selected==" << endl;
             cout << "Username: " << user << endl;
             cout << "Chips available: " << chips << endl;
             save(false); // needs save to create and write to the new user's file
@@ -120,6 +130,8 @@ class Player {
         void save(bool display){
             ofstream file(filename());
             file << "Chips: " << chips;
+
+            system("clear");
 
             if(true){
                 cout << endl << "Progress Saved" << endl;

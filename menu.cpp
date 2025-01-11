@@ -17,6 +17,7 @@ using namespace std;
     }
     
     void start(){
+        system("clear");
 
         string input;
 
@@ -36,8 +37,6 @@ using namespace std;
     
 
 int main() {
-
-    cout << "Starting";
 
     start();
 
