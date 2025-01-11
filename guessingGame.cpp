@@ -17,7 +17,7 @@ bool userSelected = false;
 
 
 // default for gameloop function so it can be called in the option function
-void gameLoop(Player player);
+void guessLoop(Player player);
 
 // displays rules
 void rules(){
@@ -67,7 +67,7 @@ void option(bool third, Player player){
         cout << "Starting game: " << endl;
 
         rules();
-        gameLoop(player);
+        guessLoop(player);
     }
     else {
         cout << "Please choose valid option";
@@ -75,7 +75,7 @@ void option(bool third, Player player){
     }
 }
 
-void gameLoop(Player player){
+void guessLoop(Player player){
     system("clear");
     int bet = -1;
     if(player.getChips() > 1){
@@ -189,7 +189,7 @@ void gameLoop(Player player){
             string input;
             cin >> input;
             if(yesCheck(input)){ 
-                gameLoop(player);
+                guessLoop(player);
             }
             else{
                 option(true, player);

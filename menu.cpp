@@ -28,7 +28,7 @@ using namespace std;
 
         // need to adjust this file and header file to resolve the following errors, read TODO to see how
         if(yesCheck(input)){
-            gameLoop(player);
+            guessLoop(player);
         }
         else {
             option(true, player);
