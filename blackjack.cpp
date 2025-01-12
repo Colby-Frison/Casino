@@ -74,6 +74,10 @@ class Deck {
             int randomNum = rand(); 
             int num = 1 + (rand() % 10);
             // makes a random number 1 - 10, change later, but this is just here for refrence
+
+            // Going to use Fishet-Yates shuffle; look it up pretty simple
+            // I chould just use the algorithm, but I don't wanna
+
             
         }
 
@@ -97,7 +101,82 @@ class Deck {
 
 };
 
+class Hand {
+    // this class is going to make it a little easier to handle each hand
+    // needs hit() split() doubledown() methods
+    // needs sum of cards variable and a vector to store the number of cards in each hand
+};
+
 void bjLoop(Player player) {
+
+    system("clear");
+
+    int bet = -1;
+
+    // same logic from guessing game
+    if(player.getChips() > 1){
+        cout << "Place a bet 1 - " << player.getChips() << ": ";
+        cin >> bet;
+    }
+    else if(player.getChips() == 1){
+        string input;
+        cout << "You only have 1 chip left, would you like to bet it? [y/n]";
+        cin >> input;
+        if(yesCheck(input)){
+            bet = 1;
+        }
+        else {
+            cout << "You have decided not to place the bet." << endl;
+            cout << "Choose one of the following options:" << endl;
+
+            cout << "1. Place the bet" << endl;
+            cout << "2. Exit game" << endl;
+            cout << "3. Pick new User" << endl;
+            if(input == "1") {
+                cout << "Placing bet" << endl;
+
+                bet = 1;
+
+            }
+            else if(input == "2") {
+                // exit game;
+                player.save(true);
+                return;
+            }
+            else if(input == "3") {
+                cout << "Picking new user: " << endl;
+                player.unselectUser();
+
+                cout << "Enter user: ";
+                cin >> input;
+                cout << endl;
+                Player(input);
+            }
+            else {
+                cout << "Please choose valid option";
+
+                // still need to work out a loop here
+            }
+        }
+    }
+    else {
+        cout << "You do not have enough chips to place a bet, please choose one of the following options: " << endl;
+
+        // Create a option method, most likely it can be the same as guessingGames, but I will probably need to change some stuff
+
+        //option(false, player);
+    }
+
+    if(bet != -1){
+
+        //actual game logic
+
+        // shuffle will never actually be called, shuffle will be called after the deck is initialized, which is at the begining 
+        // of the game, and if the deck is ever empty.
+
+        // I will have to be very carefull when drawing cards as a deck close to empty can cause issues
+
+    }
 
 }
 
