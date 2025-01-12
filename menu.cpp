@@ -1,5 +1,6 @@
 #include "menu.h"
 #include "guessingGame.h"
+#include "blackjack.h"
 
 #include <iostream>
 #include <fstream>
