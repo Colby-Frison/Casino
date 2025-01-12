@@ -36,12 +36,14 @@ so:
 - figure out how to compile with multiple files
 - check the logic of everything so I can try to reduce confusion prior to compiling
 
+
 01-08-2025 || 9:36 pm
 It almost compiles, it says the function yesCheck(string input) is declared multiple times in main.cpp, but it isnt even defined in that file so
 I'm not sure what the issue is. That is the only error left though (unless yesCheck() causes errors), so after I get that wokring it should compile.
 
 so:
 - get yesCheck() to work properly
+
 
 01-10-2025 || 9:17 pm
 The reason it wouldnt compile is I had the yesCheck mehod defined in the header instead of the source file, I don't know why i didnt assume that was
@@ -59,3 +61,20 @@ so:
 - make other game loops
 
 - potentially figure out server stuff for multiplayer games (Poker, blackjack, and maybe even roullete)
+
+
+01-11-2025 || 7:55 pm
+I still havent tested creating new user, I can do that later. I did rename the loops though, and initialized the other files. I decided to do blackjack 
+before the other as well since slots and roulette is essentailly the exact same as guessing game with just different visuals which I'm not sure how to 
+do yet. For the blackjack file I have made the card and deck classes and started on the game loop. I haven't actually gotten down to the actual blackjack
+logic, but I got the boring stuff done. The shuffle function also needs to be made, this is described in the file, but it will probably be the Most
+logically confusing part. I also need to do the hand class, I don't know If I'm actaully going to do this since it may be over complicating it, but it
+seems like the right thing to do, the things in that class are described in the class. This will also require some logic work. I feel like this is the 
+best way to do it though as I can store the houses hand and players hand seperatley in a simple way, and if I eventully go to multiplayer I can make
+multiple players hands easily.
+
+so:
+- do the testing of past stuff
+- make shuffle function
+- do bj game logic
+- at least start making the hand class, or decide on another route
