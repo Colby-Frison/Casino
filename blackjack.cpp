@@ -98,6 +98,18 @@ class Deck {
             return sizeof(deck);
         }
 
+        Card draw() {
+            top++;
+
+            if ( top <= 104)
+                return deck[top - 1];
+            else {
+                top = 1;
+                shuffleDeck();
+                return deck[top - 1];
+            }
+        }
+
 
         void printDeck() {
 
@@ -123,6 +135,11 @@ class Hand {
         int val; // number value of hand
         int numCards; // number of cards in hand
 
+        int bet = -1; // starts a -1 if not -1 assign bet
+        // done this way so bet can be handled ber hand in case of splits
+
+        bool doubled = false; // mark true if player doubled so it knows if player can hit again
+
         vector<Card> hand; // a vector containg a vectors of cards aka hands
         // I did this this way 
 
@@ -138,6 +155,14 @@ class Hand {
 
             val += card.getVal();
             numCards++;
+        }
+
+        int getBet() {
+            return bet;
+        }
+
+        void setBet(int b) {
+            bet = b;
         }
 };
 
@@ -159,34 +184,33 @@ vector<Hand> split(Hand hand) {
 }
 
 // doubles players bet
+// only able to double when player has 2 cards, only allowed to draw one more time
 void doubleD(Hand hand) {
-
+    hand.setBet(hand.getBet() * 2);
 }
 
 void bjLoop(Player player) {
     vector<Hand> playerHand;
     vector<Hand> houseHand;
 
-    if(deck.size() < 15) {
-        
-    }
-
-
     system("clear");
+    
+    int inputI;
+    string inputS;
 
-    int bet = -1;
 
     // same logic from guessing game
     if(player.getChips() > 1){
         cout << "Place a bet 1 - " << player.getChips() << ": ";
-        cin >> bet;
+        cin >> inputI;
+        playerHand[0].setBet(inputI); // since this is the first thing done we done have to worrry about a split
     }
     else if(player.getChips() == 1){
         string input;
         cout << "You only have 1 chip left, would you like to bet it? [y/n]";
         cin >> input;
         if(yesCheck(input)){
-            bet = 1;
+            playerHand[0].setBet(1);
         }
         else {
             cout << "You have decided not to place the bet." << endl;
@@ -198,7 +222,7 @@ void bjLoop(Player player) {
             if(input == "1") {
                 cout << "Placing bet" << endl;
 
-                bet = 1;
+                playerHand[0].setBet(1);
 
             }
             else if(input == "2") {
@@ -230,10 +254,13 @@ void bjLoop(Player player) {
         //option(false, player);
     }
 
-    if(bet != -1){
+    if(playerHand[0].getBet() != -1){
+
         // Dealing
         // one card delt to each player, THEN to the dealer (all face up)
         // then another is dealt to each player again face up, then the dealer gets a card face down
+        
+
 
         // Turn
         // player then gets the choice to hit/ stand/ double/ split
