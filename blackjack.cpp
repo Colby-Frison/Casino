@@ -213,7 +213,7 @@ void doubleD(Hand hand) {
 
 void bjLoop(Player player) {
     vector<Hand> playerHand;
-    vector<Hand> houseHand;
+    vector<Hand> houseHand; // now that I'm thinking about it, house doesnt need a hand vecto as a split will never ocur so I can just go with a single hand
 
     system("clear");
     
@@ -291,13 +291,14 @@ void bjLoop(Player player) {
         }
         else {
             cout << "Please choose a valid option" << endl;
+            //make loopable
         }
     }
 
     if(playerHand[0].getBet() != -1) {
         // Dealing initial cards
         for (auto& hand : playerHand) {
-            hand.addCard(deck.draw(), 0);
+            hand.addCard(deck.draw(), 0); // Not the intended way as it may cause a problem if a split occurs
         }
         houseHand[0].addCard(deck.draw(), 0);  // Dealer's first card (face up)
         
@@ -324,13 +325,13 @@ void bjLoop(Player player) {
                         hand.displayHand();
                         break;
                     case 2: // Stand
-                        playing = false;
+                        playing = false; // not sure about this
                         break;
                     case 3: // Double
                         if (hand.getNumCards() == 2 && !hand.isDoubled()) {
                             doubleD(hand);
                             hand.addCard(deck.draw(), 0);
-                            hand.displayHand();
+                            hand.displayHand(); // make sure this wors after splits
                             playing = false;
                         } else {
                             cout << "Cannot double at this time!" << endl;
