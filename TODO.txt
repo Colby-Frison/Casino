@@ -78,3 +78,8 @@ so:
 - make shuffle function
 - do bj game logic
 - at least start making the hand class, or decide on another route
+
+
+01-13-2025 || 12:26 pm
+Most of the structure is already done, just hav eot do the actual game loop which is mostly laid out. Just need to sort out the proper way to 
+route the game logic
