@@ -82,4 +82,16 @@ so:
 
 01-13-2025 || 12:26 pm
 Most of the structure is already done, just hav eot do the actual game loop which is mostly laid out. Just need to sort out the proper way to 
-route the game logic
+route the game logic.
+
+3:50 pm
+Tried out cursor IDE, has a lot of AI features similar to co pilot, kinda useful, but its better for smaller things than for big sections. Overall
+not bad, but still not great. Used it to finish up the blackjack game loop, but I will definatley have to go back and fix some of the logic. I will 
+also have to go in and do the option stuff. I liked its idea with the vector of option then list them, but it is still ify.
+
+so:
+- revise blackjack logic
+- do option stuff
+- make sure other changes are fine
+
+
