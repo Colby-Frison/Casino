@@ -52,6 +52,9 @@ class Deck {
         // rank int so its easier to get val
         int vals[13] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
 
+        // denotes the top of the array so I can properly iterate the array as a queue
+        int top;
+
     public:
 
         // constructor
@@ -73,6 +76,8 @@ class Deck {
                     deck[dIndex + 52].setVal(vals[j]);
                 }
             }
+
+            shuffleDeck();
         }
 
         void shuffleDeck() {
@@ -87,6 +92,10 @@ class Deck {
             // I chould just use the algorithm, but I don't wanna
 
             
+        }
+
+        int size() {
+            return sizeof(deck);
         }
 
 
@@ -132,7 +141,36 @@ class Hand {
         }
 };
 
+Deck deck;
+
+// This will be a method call to hand if the player wants to hit split or double
+// Don't know if this is the way to go, but it seems right since it needs kind of be done recursively in the case of splits
+void turn(Hand hand) {
+
+}
+
+// player is allowed to split when the have a pair of cards with the same rank (suit is irrelevant)
+// when a split occurs the player places a bet of equal value on the pslit hand
+// The idea is the returned vector can be either added to or made equal to the players hand, but if a splt occurs more than once a problem would occur
+vector<Hand> split(Hand hand) {
+     vector<Hand> newHand;
+
+     return newHand;
+}
+
+// doubles players bet
+void doubleD(Hand hand) {
+
+}
+
 void bjLoop(Player player) {
+    vector<Hand> playerHand;
+    vector<Hand> houseHand;
+
+    if(deck.size() < 15) {
+        
+    }
+
 
     system("clear");
 
@@ -193,13 +231,22 @@ void bjLoop(Player player) {
     }
 
     if(bet != -1){
+        // Dealing
+        // one card delt to each player, THEN to the dealer (all face up)
+        // then another is dealt to each player again face up, then the dealer gets a card face down
 
-        //actual game logic
+        // Turn
+        // player then gets the choice to hit/ stand/ double/ split
+        // they can then continue to take turns on each hand until they decide to stand or they bust 
 
-        // shuffle will never actually be called, shuffle will be called after the deck is initialized, which is at the begining 
-        // of the game, and if the deck is ever empty.
+        // Dealers turn
+        // Then dealer reveals card and hits until their hand is 17 or above (17 is arbitrary, its jus tthe house rules)
 
-        // I will have to be very carefull when drawing cards as a deck close to empty can cause issues
+        // Winnings
+        // Player bust = no win
+        // House bust = player win
+        // player & house tie = player win
+
 
     }
 
