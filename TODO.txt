@@ -94,4 +94,13 @@ so:
 - do option stuff
 - make sure other changes are fine
 
+4:32 pm
+Right now the entire game loop occurs in the actual loop function the issue with that is the player can hit essenially as many times as they want 
+while under 21 while my code only allows for one hit. This obviously causes an issue when more than one hit is needed, or when the hand is split the entire 
+loop then needs to occur on those "new" hands. So I need to refactor the actuall game function loop to be within a function so it can be called 
+many times recusively.
+
+so:
+- refactor game loop to be within a function
+- make sure other changes are fine
 
