@@ -4,6 +4,7 @@
 #include <string>
 #include <cstdlib>
 #include <ctime>
+#include <vector>
 
 using namespace std;
 
@@ -12,19 +13,22 @@ class Card {
     private:
         string rank; // the number value
         string suit; // the symbol thing
+        int val; // card val
+        string ranks[13] = {"Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"};
     public:
 
         // constructors
-        Card(): rank(""), suit("") {}
-        Card(string rank, string suit): rank(rank), suit(suit) {}
+        Card(): val(-1), suit("") {}
+        Card(int rank, string suit): val(rank), suit(suit) {}
 
         // setters
-        void setRank(string r) { rank = r; }
+        void setVal(int r) { rank = r; }
         void setSuit(string s) { suit = s; }
 
         // getters
-        string getRank() { return rank; }
+        string getRank() { return ranks[val -1]; }
         string getSuit() { return suit; }
+        int getVal() { return val; }
 
         // print function
         void printCard() { cout << rank << suit; }
@@ -42,11 +46,15 @@ class Deck {
         // H = hearts, D = diamonds, C = clubs, S = spades
         string suits[4] = {"H", "D", "C", "S"};
 
-        //
-        string ranks[13] = {"Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"};
+        // ranks string
+        // string ranks[13] = {"Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"};
+
+        // rank int so its easier to get val
+        int vals[13] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
 
     public:
 
+        // constructor
         Deck() {
             // nested loop to intialize all cards
             // i loops through all possible suits j loops through all possible ranks
@@ -58,11 +66,11 @@ class Deck {
 
                     // initialize first deck
                     deck[dIndex].setSuit(suits[i]);
-                    deck[dIndex].setRank(ranks[j]);
+                    deck[dIndex].setVal(vals[j]);
 
                     // and second deck
                     deck[dIndex + 52].setSuit(suits[i]);
-                    deck[dIndex + 52].setRank(ranks[j]);
+                    deck[dIndex + 52].setVal(vals[j]);
                 }
             }
         }
@@ -102,9 +110,26 @@ class Deck {
 };
 
 class Hand {
-    // this class is going to make it a little easier to handle each hand
-    // needs hit() split() doubledown() methods
-    // needs sum of cards variable and a vector to store the number of cards in each hand
+    private: 
+        int val; // number value of hand
+        int numCards; // number of cards in hand
+
+        vector<Card> hand; // a vector containg a vectors of cards aka hands
+        // I did this this way 
+
+    public: 
+
+        // constructor
+        Hand(): val(-1), numCards(0) {}
+        Hand(int val, int numCards, bool split, vector<Card> hand): val(val), numCards(numCards), hand(hand) {}
+
+        //add card to hand
+        void addCard(Card card, int index){
+            hand.push_back(card);
+
+            val += card.getVal();
+            numCards++;
+        }
 };
 
 void bjLoop(Player player) {
