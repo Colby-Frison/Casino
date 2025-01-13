@@ -26,9 +26,9 @@ class Card {
         void setSuit(string s) { suit = s; }
 
         // getters
-        string getRank() { return ranks[val -1]; }
-        string getSuit() { return suit; }
-        int getVal() { return val; }
+        string getRank() const { return ranks[val -1]; }
+        string getSuit() const { return suit; }
+        int getVal() const { return val; }
 
         // print function
         void printCard() { cout << rank << suit; }
@@ -81,17 +81,21 @@ class Deck {
         }
 
         void shuffleDeck() {
-
-            srand(time(0)); 
-
-            int randomNum = rand(); 
-            int num = 1 + (rand() % 10);
-            // makes a random number 1 - 10, change later, but this is just here for refrence
-
-            // Going to use Fishet-Yates shuffle; look it up pretty simple
-            // I chould just use the algorithm, but I don't wanna
-
+            srand(time(0));
             
+            // Fisher-Yates shuffle algorithm
+            for (int i = 103; i > 0; i--) {
+                // Generate random index between 0 and i (inclusive)
+                int j = rand() % (i + 1);
+                
+                // Swap elements at i and j
+                Card temp = deck[i];
+                deck[i] = deck[j]; 
+                deck[j] = temp;
+            }
+            
+            // Reset top of deck
+            top = 0;
         }
 
         int size() {
@@ -99,15 +103,11 @@ class Deck {
         }
 
         Card draw() {
-            top++;
-
-            if ( top <= 104)
-                return deck[top - 1];
-            else {
-                top = 1;
+            if (top >= 104) {
                 shuffleDeck();
-                return deck[top - 1];
+                top = 0;
             }
+            return deck[top++];
         }
 
 
@@ -164,15 +164,37 @@ class Hand {
         void setBet(int b) {
             bet = b;
         }
+
+        vector<Card>& getCards() {
+            return hand;
+        }
+        
+        void displayHand() {
+            for (const Card& card : hand) {
+                cout << card.getRank() << card.getSuit() << " ";
+            }
+            cout << endl;
+        }
+        
+        int getValue() {
+            return val;
+        }
+        
+        int getNumCards() {
+            return numCards;
+        }
+        
+        bool isDoubled() {
+            return doubled;
+        }
+        
+        bool canSplit() {
+            return numCards == 2 && hand[0].getRank() == hand[1].getRank();
+        }
 };
 
 Deck deck;
 
-// This will be a method call to hand if the player wants to hit split or double
-// Don't know if this is the way to go, but it seems right since it needs kind of be done recursively in the case of splits
-void turn(Hand hand) {
-
-}
 
 // player is allowed to split when the have a pair of cards with the same rank (suit is irrelevant)
 // when a split occurs the player places a bet of equal value on the pslit hand
@@ -248,43 +270,112 @@ void bjLoop(Player player) {
     }
     else {
         cout << "You do not have enough chips to place a bet, please choose one of the following options: " << endl;
-
-        // Create a option method, most likely it can be the same as guessingGames, but I will probably need to change some stuff
-
-        //option(false, player);
-    }
-
-    if(playerHand[0].getBet() != -1){
-
-        // Dealing
-        // one card delt to each player, THEN to the dealer (all face up)
-        // then another is dealt to each player again face up, then the dealer gets a card face down
+        cout << "1. Exit game" << endl;
+        cout << "2. Pick new user" << endl;
         
-
-
-        // Turn
-        // player then gets the choice to hit/ stand/ double/ split
-        // they can then continue to take turns on each hand until they decide to stand or they bust 
-
-        // Dealers turn
-        // Then dealer reveals card and hits until their hand is 17 or above (17 is arbitrary, its jus tthe house rules)
-
-        // Winnings
-        // Player bust = no win
-        // House bust = player win
-        // player & house tie = player win
-
-
+        string input;
+        cin >> input;
+        
+        if(input == "1") {
+            player.save(true);
+            return;
+        }
+        else if(input == "2") {
+            cout << "Picking new user: " << endl;
+            player.unselectUser();
+            
+            cout << "Enter user: ";
+            cin >> input;
+            cout << endl;
+            Player(input);
+        }
+        else {
+            cout << "Please choose a valid option" << endl;
+        }
     }
 
-}
+    if(playerHand[0].getBet() != -1) {
+        // Dealing initial cards
+        for (auto& hand : playerHand) {
+            hand.addCard(deck.draw(), 0);
+        }
+        houseHand[0].addCard(deck.draw(), 0);  // Dealer's first card (face up)
+        
+        for (auto& hand : playerHand) {
+            hand.addCard(deck.draw(), 0);
+        }
+        houseHand[0].addCard(deck.draw(), 0);  // Dealer's second card (face down)
 
-int main() {
-    Deck deck;
+        // Display initial hands
+        cout << "Dealer's hand: " << houseHand[0].getCards()[0].getRank() << " [Hidden]" << endl;
+        cout << "Your hand: ";
+        playerHand[0].displayHand();
+        
+        // Player's turn for each hand
+        for (auto& hand : playerHand) {
+            bool playing = true;
+            while (playing && hand.getValue() < 21) {
+                cout << "\nChoose action (1: Hit, 2: Stand, 3: Double, 4: Split): ";
+                cin >> inputI;
+                
+                switch(inputI) {
+                    case 1: // Hit
+                        hand.addCard(deck.draw(), 0);
+                        hand.displayHand();
+                        break;
+                    case 2: // Stand
+                        playing = false;
+                        break;
+                    case 3: // Double
+                        if (hand.getNumCards() == 2 && !hand.isDoubled()) {
+                            doubleD(hand);
+                            hand.addCard(deck.draw(), 0);
+                            hand.displayHand();
+                            playing = false;
+                        } else {
+                            cout << "Cannot double at this time!" << endl;
+                        }
+                        break;
+                    case 4: // Split
+                        if (hand.canSplit()) {
+                            playerHand = split(hand);
+                        } else {
+                            cout << "Cannot split these cards!" << endl;
+                        }
+                        break;
+                    default:
+                        cout << "Invalid option!" << endl;
+                }
+            }
+            
+            if (hand.getValue() > 21) {
+                cout << "Bust!" << endl;
+            }
+        }
 
-    deck.printDeck();
-    deck.printDeck();
+        // Dealer's turn
+        cout << "\nDealer's turn:" << endl;
+        houseHand[0].displayHand(); // Show both cards
+        
+        while (houseHand[0].getValue() < 17) {
+            houseHand[0].addCard(deck.draw(), 0);
+            houseHand[0].displayHand();
+        }
 
+        // Determine winners and pay out
+        for (auto& hand : playerHand) {
+            if (hand.getValue() <= 21) {
+                if (houseHand[0].getValue() > 21 || hand.getValue() > houseHand[0].getValue()) {
+                    player.addChips(hand.getBet() * 2);  // Win pays 2:1
+                    cout << "Hand won! +" << hand.getBet() * 2 << " chips" << endl;
+                } else if (hand.getValue() == houseHand[0].getValue()) {
+                    player.addChips(hand.getBet());  // Push returns bet
+                    cout << "Push! Bet returned" << endl;
+                } else {
+                    cout << "Hand lost!" << endl;
+                }
+            }
+        }
+    }
 
-    return 0;
 }
