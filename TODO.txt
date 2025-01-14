@@ -110,3 +110,8 @@ Everything seems good just need to add to menu and redo the start for menu to ha
 so:
 - add to menu
 - redo start for menu
+
+5:30pm
+The gameloop mostly works, there are just small issues with how the blackjack value is calculated. There may also be an issue with how the houses
+value is caculated, but I'm not sure since I havent run into that issue yet. The only other thing needing to be fixed/added is spacing between 
+lines of text, and I want to clear the console a few more times throuogh.
