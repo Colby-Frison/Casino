@@ -104,3 +104,9 @@ so:
 - refactor game loop to be within a function
 - make sure other changes are fine
 
+01-14-2025 || 9:59pm
+Everything seems good just need to add to menu and redo the start for menu to have multilple game options. 
+
+so:
+- add to menu
+- redo start for menu
