@@ -237,12 +237,37 @@ class Hand {
             
             return total;
         }
+
+        int getBlackjackValueHose() {
+            int total = 0;
+            int aces = 0;
+            
+            for (const Card& card : hand) {
+                if (card.getVal() == 1) {  // Ace
+                    aces++;
+                    total += 11;
+                } else if (card.getVal() > 10) {  // Face cards
+                    total += 10;
+                } else {
+                    total += card.getVal();
+                }
+            }
+            
+            // Adjust for aces if over 21
+            while (total > 21 && aces > 0) {
+                total -= 10;  // Convert ace from 11 to 1
+                aces--;
+            }
+            
+            return total;
+        }
 };
 
 Deck deck;
 vector<Hand> playerHand;
 vector<Hand> houseHand;
 
+void bjLoop(Player player);
 
 // player is allowed to split when the have a pair of cards with the same rank (suit is irrelevant)
 // when a split occurs the player places a bet of equal value on the pslit hand
@@ -303,6 +328,23 @@ int handleOptions(Player& player) {
     }
 }
 
+void playAgain(Player player) {
+    string input;
+    cout << "Play again? [y/n]" << endl;
+    cin >> input;
+    if(yesCheck(input)) {
+        // Clear hands before starting new game
+        playerHand.clear();
+        houseHand.clear();
+        bjLoop(player);
+        return;
+    }
+    else {
+        handleOptions(player);
+        return;
+    }
+}
+
 void bjLoop(Player player) {
     // Initialize hands if empty
     if (playerHand.empty()) {
@@ -353,7 +395,7 @@ void bjLoop(Player player) {
             hand.addCard(deck.draw(), 0);
         }
         houseHand[0].addCard(deck.draw(), 0);  // Dealer's first card (face up)
-        cout << "test" << endl;
+
         for (Hand& hand : playerHand) {
             hand.addCard(deck.draw(), 0);
         }
@@ -370,7 +412,7 @@ void bjLoop(Player player) {
         // Player's turn for each hand
         for (auto& hand : playerHand) {
             bool playing = true;
-            while (playing && hand.getValue() < 21) {
+            while (playing && hand.getBlackjackValue() < 21) {
                 cout << "\nChoose action (1: Hit, 2: Stand, 3: Double, 4: Split): ";
                 cin >> inputI;
                 
@@ -404,44 +446,50 @@ void bjLoop(Player player) {
                 }
             }
             
-            if (hand.getValue() > 21) {
-                cout << "Bust!" << endl;
+            if (hand.getBlackjackValue() > 21) {
+                cout << "Bust!" << endl << endl;
+                player.takeChips(hand.getBet());
+                cout << "Hand lost!" << endl << endl;;
+                playAgain(player);
+                return;
             }
+            else if (hand.getBlackjackValue() == 21) {
+                cout << "Blackjack!" << endl << endl;
+
+                player.addChips(hand.getBet() * 2); 
+                cout << "Hand won! +" << hand.getBet() * 2 << " chips" << endl;
+                playAgain(player);
+                return;
+            }
+
         }
 
         // Dealer's turn
         cout << "\nDealer's turn:" << endl;
         houseHand[0].displayHand(); // Show both cards
         
-        while (houseHand[0].getValue() < 17) {
+        while (houseHand[0].getBlackjackValueHose() < 17) {
             houseHand[0].addCard(deck.draw(), 0);
             houseHand[0].displayHand();
         }
 
         // Determine winners and pay out
         for (auto& hand : playerHand) {
-            if (hand.getValue() <= 21) {
-                if (houseHand[0].getValue() > 21 || hand.getValue() > houseHand[0].getValue()) {
+            if (hand.getBlackjackValue() <= 21) {
+                if (houseHand[0].getBlackjackValue() > 21 || hand.getBlackjackValue() > houseHand[0].getBlackjackValue()) {
                     player.addChips(hand.getBet() * 2);  // Win pays 2:1
                     cout << "Hand won! +" << hand.getBet() * 2 << " chips" << endl;
-                } else if (hand.getValue() == houseHand[0].getValue()) {
+                } else if (hand.getBlackjackValue() == houseHand[0].getBlackjackValueHose()) {
                     player.addChips(hand.getBet());  // Push returns bet
                     cout << "Push! Bet returned" << endl;
                 } else {
+                    player.takeChips(hand.getBet());
                     cout << "Hand lost!" << endl;
                 }
             }
         }
 
-        cout << "Play again? [y/n]" << endl;
-        cin >> inputS;
-        if(yesCheck(inputS)) {
-            bjLoop(player);
-        }
-        else {
-            handleOptions(player);
-            return;
-        }
+        playAgain(player);
     }
 
 }
