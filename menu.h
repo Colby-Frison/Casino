@@ -21,6 +21,7 @@ class Player {
 
         // constructors
         Player(): chips(-1), userSelected(false) {
+            system("clear");
             cout << "No user selected, select user? [y/n]:";
 
             string input;
@@ -109,6 +110,10 @@ class Player {
             return chips;
         }
 
+        int gChips() const {
+            return chips;
+        }
+
         // Setters: 
         void selectUser(){
             userSelected = true;
@@ -151,6 +156,23 @@ class Player {
             fileName += ".txt";
 
             return fileName;
+        }
+
+        // For loading chips from file
+        void loadChips() {
+            if(chips == -1) {
+                ifstream userFile(filename());
+                string line;
+                getline(userFile, line);
+                string chipStr = "";
+                for(char c : line) {
+                    if(isdigit(c)) {
+                        chipStr += c;
+                    }
+                }
+                chips = stoi(chipStr);
+                userFile.close();
+            }
         }
 
 };

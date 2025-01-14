@@ -188,21 +188,77 @@ class Hand {
             return doubled;
         }
         
-        bool canSplit() {
-            return numCards == 2 && hand[0].getRank() == hand[1].getRank();
+        bool canSplit(const Player& player) const {
+            // Check if hand has exactly 2 cards of the same value
+            if (hand.size() != 2 || hand[0].getVal() != hand[1].getVal()) {
+                return false;
+            }
+            
+            // Check if player has enough chips to match the current bet
+            if (player.gChips() < bet) {
+                return false;
+            }
+            
+            return true;
+        }
+
+        int getBlackjackValue() {
+            int total = 0;
+            int aces = 0;
+            
+            for (const Card& card : hand) {
+                if (card.getVal() == 1) {  // Ace
+                    aces++;
+                    total += 11;
+                } else if (card.getVal() > 10) {  // Face cards
+                    total += 10;
+                } else {
+                    total += card.getVal();
+                }
+            }
+            
+            // Adjust for aces if over 21
+            while (total > 21 && aces > 0) {
+                total -= 10;  // Convert ace from 11 to 1
+                aces--;
+            }
+            
+            return total;
         }
 };
 
 Deck deck;
+vector<Hand> playerHand;
+vector<Hand> houseHand;
 
 
 // player is allowed to split when the have a pair of cards with the same rank (suit is irrelevant)
 // when a split occurs the player places a bet of equal value on the pslit hand
 // The idea is the returned vector can be either added to or made equal to the players hand, but if a splt occurs more than once a problem would occur
-vector<Hand> split(Hand hand) {
-     vector<Hand> newHand;
-
-     return newHand;
+vector<Hand> split(Hand& hand) {
+    vector<Hand> newHands;
+    
+    // Create two new hands from the split
+    Hand hand1;
+    Hand hand2;
+    
+    // Set bets for both hands equal to original
+    int originalBet = hand.getBet();
+    hand1.setBet(originalBet);
+    hand2.setBet(originalBet);
+    
+    // Distribute the cards
+    hand1.addCard(hand.getCards()[0], 0);
+    hand2.addCard(hand.getCards()[1], 0);
+    
+    // Add new card to each hand
+    hand1.addCard(deck.draw(), 0);
+    hand2.addCard(deck.draw(), 0);
+    
+    newHands.push_back(hand1);
+    newHands.push_back(hand2);
+    
+    return newHands;
 }
 
 // doubles players bet
@@ -211,9 +267,31 @@ void doubleD(Hand hand) {
     hand.setBet(hand.getBet() * 2);
 }
 
-void bjLoop(Player player) {
-    vector<Hand> playerHand;
-    vector<Hand> houseHand; // now that I'm thinking about it, house doesnt need a hand vecto as a split will never ocur so I can just go with a single hand
+int handleOptions(Player& player) {
+    while (true) {
+        cout << "Choose one of the following options:" << endl;
+        cout << "1. Exit game" << endl;
+        cout << "2. Pick new user" << endl;
+
+        string input;
+        cin >> input;
+
+        if (input == "1") {
+            player.save(true);
+            return 1;
+        }
+        else if (input == "2") {
+            player.unselectUser();
+            player = Player();
+            return 2;
+        }
+        else {
+            cout << "Please choose a valid option" << endl;
+        }
+    }
+}
+
+void bjLoop(Player player) { // now that I'm thinking about it, house doesnt need a hand vecto as a split will never ocur so I can just go with a single hand
 
     system("clear");
     
@@ -236,63 +314,14 @@ void bjLoop(Player player) {
         }
         else {
             cout << "You have decided not to place the bet." << endl;
-            cout << "Choose one of the following options:" << endl;
-
-            cout << "1. Place the bet" << endl;
-            cout << "2. Exit game" << endl;
-            cout << "3. Pick new User" << endl;
-            if(input == "1") {
-                cout << "Placing bet" << endl;
-
-                playerHand[0].setBet(1);
-
-            }
-            else if(input == "2") {
-                // exit game;
-                player.save(true);
-                return;
-            }
-            else if(input == "3") {
-                cout << "Picking new user: " << endl;
-                player.unselectUser();
-
-                cout << "Enter user: ";
-                cin >> input;
-                cout << endl;
-                Player(input);
-            }
-            else {
-                cout << "Please choose valid option";
-
-                // still need to work out a loop here
-            }
+            handleOptions(player);
+            return;
         }
     }
     else {
-        cout << "You do not have enough chips to place a bet, please choose one of the following options: " << endl;
-        cout << "1. Exit game" << endl;
-        cout << "2. Pick new user" << endl;
-        
-        string input;
-        cin >> input;
-        
-        if(input == "1") {
-            player.save(true);
-            return;
-        }
-        else if(input == "2") {
-            cout << "Picking new user: " << endl;
-            player.unselectUser();
-            
-            cout << "Enter user: ";
-            cin >> input;
-            cout << endl;
-            Player(input);
-        }
-        else {
-            cout << "Please choose a valid option" << endl;
-            //make loopable
-        }
+        cout << "You do not have enough chips to place a bet" << endl;
+        handleOptions(player);
+        return;
     }
 
     if(playerHand[0].getBet() != -1) {
@@ -338,7 +367,7 @@ void bjLoop(Player player) {
                         }
                         break;
                     case 4: // Split
-                        if (hand.canSplit()) {
+                        if (hand.canSplit(player)) {
                             playerHand = split(hand);
                         } else {
                             cout << "Cannot split these cards!" << endl;
@@ -376,6 +405,16 @@ void bjLoop(Player player) {
                     cout << "Hand lost!" << endl;
                 }
             }
+        }
+
+        cout << "Play again? [y/n]" << endl;
+        cin >> inputS;
+        if(yesCheck(inputS)) {
+            bjLoop(player);
+        }
+        else {
+            handleOptions(player);
+            return;
         }
     }
 
