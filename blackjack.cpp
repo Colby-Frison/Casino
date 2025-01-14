@@ -22,16 +22,22 @@ class Card {
         Card(int rank, string suit): val(rank), suit(suit) {}
 
         // setters
-        void setVal(int r) { rank = r; }
+        void setVal(int v) { val = v; }
         void setSuit(string s) { suit = s; }
 
         // getters
         string getRank() const { return ranks[val -1]; }
         string getSuit() const { return suit; }
-        int getVal() const { return val; }
+        int getVal() const { 
+            if (val == 1) return 11;  // Ace (handled as 1 or 11 in Hand class)
+            if (val > 10) return 10;  // Face cards
+            return val;  // Number cards
+        }
 
         // print function
-        void printCard() { cout << rank << suit; }
+        void printCard() const { 
+            cout << ranks[val - 1] << suit; 
+        }
 };
 
 class Deck {
@@ -49,8 +55,6 @@ class Deck {
         // ranks string
         // string ranks[13] = {"Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"};
 
-        // rank int so its easier to get val
-        int vals[13] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
 
         // denotes the top of the array so I can properly iterate the array as a queue
         int top;
@@ -59,6 +63,7 @@ class Deck {
 
         // constructor
         Deck() {
+            top = 0;
             // nested loop to intialize all cards
             // i loops through all possible suits j loops through all possible ranks
             // This goes through all possible cards
@@ -69,11 +74,11 @@ class Deck {
 
                     // initialize first deck
                     deck[dIndex].setSuit(suits[i]);
-                    deck[dIndex].setVal(vals[j]);
+                    deck[dIndex].setVal(j + 1);
 
                     // and second deck
                     deck[dIndex + 52].setSuit(suits[i]);
-                    deck[dIndex + 52].setVal(vals[j]);
+                    deck[dIndex + 52].setVal(j + 1);
                 }
             }
 
@@ -81,17 +86,24 @@ class Deck {
         }
 
         void shuffleDeck() {
-            srand(time(0));
+            static bool seeded = false;
+            if (!seeded) {
+                srand(time(0));
+                seeded = true;
+            }
             
             // Fisher-Yates shuffle algorithm
-            for (int i = 103; i > 0; i--) {
+            for (int i = size() - 1; i > 0; i--) {
                 // Generate random index between 0 and i (inclusive)
                 int j = rand() % (i + 1);
                 
-                // Swap elements at i and j
-                Card temp = deck[i];
-                deck[i] = deck[j]; 
-                deck[j] = temp;
+                // Verify indices are valid
+                if (i < size() && j < size()) {
+                    // Swap elements at i and j
+                    Card temp = deck[i];
+                    deck[i] = deck[j]; 
+                    deck[j] = temp;
+                }
             }
             
             // Reset top of deck
@@ -99,11 +111,11 @@ class Deck {
         }
 
         int size() {
-            return sizeof(deck);
+            return 104;
         }
 
         Card draw() {
-            if (top >= 104) {
+            if (top < 0 || top >= 104) {
                 shuffleDeck();
                 top = 0;
             }
@@ -291,7 +303,14 @@ int handleOptions(Player& player) {
     }
 }
 
-void bjLoop(Player player) { // now that I'm thinking about it, house doesnt need a hand vecto as a split will never ocur so I can just go with a single hand
+void bjLoop(Player player) {
+    // Initialize hands if empty
+    if (playerHand.empty()) {
+        playerHand.push_back(Hand());
+    }
+    if (houseHand.empty()) {
+        houseHand.push_back(Hand());
+    }
 
     system("clear");
     
@@ -303,6 +322,10 @@ void bjLoop(Player player) { // now that I'm thinking about it, house doesnt nee
     if(player.getChips() > 1){
         cout << "Place a bet 1 - " << player.getChips() << ": ";
         cin >> inputI;
+        system("clear");
+
+        cout << "Bet placed: " << inputI << endl << endl;
+
         playerHand[0].setBet(inputI); // since this is the first thing done we done have to worrry about a split
     }
     else if(player.getChips() == 1){
@@ -325,20 +348,23 @@ void bjLoop(Player player) { // now that I'm thinking about it, house doesnt nee
     }
 
     if(playerHand[0].getBet() != -1) {
-        // Dealing initial cards
-        for (auto& hand : playerHand) {
-            hand.addCard(deck.draw(), 0); // Not the intended way as it may cause a problem if a split occurs
+        // Dealing initial cardsc
+        for (Hand& hand : playerHand) {
+            hand.addCard(deck.draw(), 0);
         }
         houseHand[0].addCard(deck.draw(), 0);  // Dealer's first card (face up)
-        
-        for (auto& hand : playerHand) {
+        cout << "test" << endl;
+        for (Hand& hand : playerHand) {
             hand.addCard(deck.draw(), 0);
         }
         houseHand[0].addCard(deck.draw(), 0);  // Dealer's second card (face down)
 
         // Display initial hands
-        cout << "Dealer's hand: " << houseHand[0].getCards()[0].getRank() << " [Hidden]" << endl;
+        cout << "Dealer's hand: " << endl; 
+        houseHand[0].getCards()[0].printCard();
+        cout << " [Hidden]" << endl;
         cout << "Your hand: ";
+
         playerHand[0].displayHand();
         
         // Player's turn for each hand
